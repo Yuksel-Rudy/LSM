@@ -67,7 +67,8 @@ class LinearModel:
             ])
 
             x_rot_all, y_rot_all = [], []
-            for x, y in zip(bwc_x[i], bwc_y[i]):
+            block_idx = next((idx for idx, key in enumerate(self.blocks) if key == block["name"]), None)
+            for x, y in zip(bwc_x[block_idx], bwc_y[block_idx]):
                 rotated_points = np.dot(r, np.vstack((x.flatten(), y.flatten())))
                 x_rot = rotated_points[0, :] + block["center_x"]
                 y_rot = rotated_points[1, :] + block["center_y"]
