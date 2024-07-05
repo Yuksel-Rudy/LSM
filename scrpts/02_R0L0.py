@@ -59,10 +59,12 @@ x_a.append(x_a[0])
 y_a.append(y_a[0])
 
 fig, ax = plt.subplots()
-
-plt.plot(x, y, label='watch circle: linear', color='blue')
-plt.plot(x_c, y_c, label='watch circle: linear-corrected', color='green')
 plt.plot(x_a, y_a, label='watch circle: nonlinear', color='red')
+for i, block in enumerate(lsm.array):
+    for j in np.arange(len(lsm.blocks[block['name']].fowts)):
+        plt.plot(x[i][j], y[i][j], label='watch circle: linear', color='blue')
+        plt.plot(x_c[i][j], y_c[i][j], label='watch circle: linear-corrected', color='green')
+
 plt.axis('equal')
 plt.xlabel('x-coordinate')
 plt.ylabel('y-coordinate')

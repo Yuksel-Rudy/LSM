@@ -58,7 +58,7 @@ class LinearModel:
             bwc_x.append(x)
             bwc_y.append(y)
 
-        for block in self.array:
+        for i, block in enumerate(self.array):
             # CCW is +ve
             unit_heading = np.radians(block["unit_heading"])
             r = np.array([
@@ -67,7 +67,7 @@ class LinearModel:
             ])
 
             x_rot_all, y_rot_all = [], []
-            for x, y in zip(bwc_x, bwc_y):
+            for x, y in zip(bwc_x[i], bwc_y[i]):
                 rotated_points = np.dot(r, np.vstack((x.flatten(), y.flatten())))
                 x_rot = rotated_points[0, :] + block["center_x"]
                 y_rot = rotated_points[1, :] + block["center_y"]
@@ -77,8 +77,8 @@ class LinearModel:
                 x_rot_all.append(x_rot)
                 y_rot_all.append(y_rot)
 
-            awc_x.append(x_rot)
-            awc_y.append(y_rot)
+            awc_x.append(x_rot_all)
+            awc_y.append(y_rot_all)
             
         awc_x = np.array(awc_x, dtype=object)
         awc_y = np.array(awc_y, dtype=object)
