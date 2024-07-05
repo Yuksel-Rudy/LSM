@@ -11,6 +11,7 @@ zFair = 0
 rFair = 0
 lineLength = 1808
 typeName = "chain"
+
 ms = mp.System(depth=depth)
 ms.setLineType(dnommm=120, material='chain', name=typeName)
 ms.addBody(0, [0, 0, 0, 0, 0, 0], m=1e6, v=1e3, rM=100, AWP=1e3)
@@ -22,47 +23,31 @@ for i, angle in enumerate(angles):
 
 ms.initialize()
 ms.solveEquilibrium()
+ms.plot()
+plt.show()
 Kn_lines = []
 for line in ms.lineList:
     Kn_line = line.KB[0:2, 0:2]
     Kn_lines.append(Kn_line)
 
-LMG_FILE = "inputs/linear_group_mooring_input/lmg_01.yaml"
-# Linear Model
-# initialize
-lsm = LinearModel(linear_group_mooring_file=LMG_FILE)
-
-# create a unit cell - all 5 anchored lines
-cell_name = "center"
-angles = np.radians([0, 90, 135, 180, 270, 315])
-lmg = ["anchored line"] * 5
-mooring = {}
-mooring["mooring_heading"] = angles
-mooring["lmg"] = lmg
-lsm.create_unit_cell(name=cell_name, mooring=mooring)
+LSM_FILE = "inputs/lsm_input/R0L0.yaml"
+lsm = LinearModel(input_file=LSM_FILE)
 
 # Corrected linear model
-lsm.lin2nonlin_corr(unit_cell_name="center", Kn_lines=Kn_lines)
+lsm.unit_cells['center'].lin2nonlin_corr(Kn_lines=Kn_lines)
 
 # Create watch circles and compare
 Thrust = 2.7e6   # [N]
 delta_theta = 5  # [degree]
 # linear
-x, y = lsm.get_watch_circle(center_x=0.0,
-                            center_y=0.0,
-                            force=Thrust,
-                            delta_theta=delta_theta,
-                            unit_cell_name="center",
-                            unit_heading=0.00,
-                            corrected=False)
+x, y = lsm.get_array_watch_circle(force=Thrust,
+                                  delta_theta=delta_theta,
+                                  corrected=False)
+
 # linear-corrected
-x_c, y_c = lsm.get_watch_circle(center_x=0.0,
-                                center_y=0.0,
-                                force=Thrust,
-                                delta_theta=delta_theta,
-                                unit_cell_name="center",
-                                unit_heading=0.00,
-                                corrected=True)
+x_c, y_c = lsm.get_array_watch_circle(force=Thrust,
+                                  delta_theta=delta_theta,
+                                  corrected=True)
 # nonlinear
 x_a, y_a = [], []
 for thrust_angle in np.radians(np.arange(0, 360, delta_theta)):
@@ -74,6 +59,7 @@ x_a.append(x_a[0])
 y_a.append(y_a[0])
 
 fig, ax = plt.subplots()
+
 plt.plot(x, y, label='watch circle: linear', color='blue')
 plt.plot(x_c, y_c, label='watch circle: linear-corrected', color='green')
 plt.plot(x_a, y_a, label='watch circle: nonlinear', color='red')
