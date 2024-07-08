@@ -34,17 +34,24 @@ Blocks:
         unit_heading: 0.0
         cell: "boundary"
       - name: "fowt3"
-        center_x: 1600.0
+        center_x: -1600.0
         center_y: 0.0
         unit_heading: 90.0
         cell: "boundary"
-      - name: "fowt4"
+  - block_name: "block2"
+    fowts:
+      - name: "fowt1"
         center_x: 0.0
-        center_y: -1600.0
-        unit_heading: 180.0
+        center_y: 0.0
+        unit_heading: 0.0
+        cell: "center"
+      - name: "fowt2"
+        center_x: 0.0
+        center_y: 1600.0
+        unit_heading: 0.0
         cell: "boundary"
-      - name: "fowt5"
-        center_x: -1600.0
+      - name: "fowt3"
+        center_x: 1600.0
         center_y: 0.0
         unit_heading: 270.0
         cell: "boundary"
@@ -53,4 +60,16 @@ Array:
     center_x: 0.0
     center_y: 0.0
     unit_heading: 0.0
+  - name: "block2"
+    center_x: 1600.0
+    center_y: 0.0
+    unit_heading: 0.0
+  - name: "block1"
+    center_x: 1600.0
+    center_y: -1600.0
+    unit_heading: 180.0
+  - name: "block2"
+    center_x: 0.0
+    center_y: -1600.0
+    unit_heading: 180.0
         

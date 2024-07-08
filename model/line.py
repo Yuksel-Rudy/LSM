@@ -1,8 +1,9 @@
 import numpy as np
 
 class Line:
-    def __init__(self, group_name, OP_data):
+    def __init__(self, group_name, scope, OP_data):
         self.group_name = group_name
+        self.scope = scope
         self.OP_data = OP_data
         self.stiffness_matrices = []
 

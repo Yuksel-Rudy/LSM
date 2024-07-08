@@ -3,6 +3,8 @@ import numpy as np
 class Cell:
     def __init__(self, cell_name, mooring_heading, lmg, lines):
         self.name = cell_name
+        self.mooring_heading = mooring_heading
+        self.lmg = lmg
         self.lines = lines
         Ri = []
         Ki = []
