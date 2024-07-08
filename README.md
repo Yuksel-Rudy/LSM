@@ -4,7 +4,9 @@ An analytical linear model simulating mooring systems in large-scale repeated fl
 
 For instance, suppose you have a mooring system of 1 rank of periodicity in the x direction (that is, the central unit block is repeated once in the x direction):
 
-\[ N = \begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix} \]
+<p align="center">
+  <img src="https://latex.codecogs.com/svg.latex?N=\begin{bmatrix}1&0\\0&0\end{bmatrix}" alt="Matrix Equation" />
+</p>
 
 The user has to define the lines making the unit cells making the blocks making the final array (see example 04_R1Nx with the input R1Nxx1.yaml) as shown in the figure:
 
