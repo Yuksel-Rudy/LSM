@@ -7,7 +7,7 @@ Thrust = 1.95e6   # [N]
 delta_theta = 5  # [degree]
 
 # # Linear Model
-LSM_FILE = "inputs/lsm_input/R1Nxx1.yaml"
+LSM_FILE = "inputs/lsm_input/R1Nxx2.yaml"
 lsm = LinearModel(input_file=LSM_FILE)
 
 # linear
