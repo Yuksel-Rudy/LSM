@@ -13,8 +13,10 @@ class Line:
             k_t = data['k_t']
 
             stiffness_matrix = np.array([
-                [k_l, 0],
-                [0, k_t]
+                [k_l, 0, -k_l, 0],
+                [0, k_t, 0, -k_t],
+                [-k_l, 0, k_l, 0],
+                [0, -k_t, 0, k_t]
             ])
 
             self.stiffness_matrices.append({
