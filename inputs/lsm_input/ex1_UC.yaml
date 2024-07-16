@@ -1,0 +1,111 @@
+# Boundary Problem (BP), example 7, baseline case, N=13
+Lines:
+  - group_name: "anchored line"
+    scope: 1600.0
+    OP_data:
+      - OP: 0.00
+        k_l: 29884.9197  # inline stiffness [N/m]
+        k_t: 1636.48   # transverse stiffness [N/m]
+  - group_name: "shared line"
+    scope: 1600.00
+    OP_data:
+      - OP: 0.00
+        k_l: 11774.2991
+        k_t: 1704.94863
+
+Cells:
+  - cell_name: "center"
+    type: multiple
+    unit_1:
+      x: 0.0
+      y: 0.0
+      mooring_heading: [30.0, 90, 150, 210, 270, 330]
+      lmg: ["shared line", "anchored line", "shared line", "anchored line", "shared line", "anchored line"]
+      connections: [2, 6, 10]
+    unit_2:
+      x: 1385.64
+      y: 800
+      mooring_heading: [90, 150, 210, 270, 330]
+      lmg: ["shared line", "anchored line", "shared line", "anchored line", "shared line"]
+      connections: [3, 1, 7]                                           
+    unit_3:
+      x: 1385.64
+      y: 2400
+      mooring_heading: [30, 150, 210, 270]
+      lmg: ["shared line", "shared line", "anchored line", "shared line"]
+      connections: ['b12', 4, 2]
+    unit_4:
+      x: 0
+      y: 3200
+      mooring_heading: [90, 210, 270, 330]
+      lmg: ["shared line", "shared line", "anchored line", "shared line"]
+      connections: ['b9', 5, 3]
+    unit_5:
+      x: -1385.64
+      y: 2400
+      mooring_heading: [30, 150, 270, 330]
+      lmg: ["shared line", "anchored line", "shared line", "anchored line"]
+      connections: [4, 6]                                                         
+    unit_6:
+      x: -1385.64
+      y: 800
+      mooring_heading: [30, 90, 210, 270, 330]
+      lmg: ["anchored line", "shared line", "shared line", "anchored line", "shared line"]
+      connections: [5, 13, 1]
+    unit_7:
+      x: 2771.28
+      y: 0
+      mooring_heading: [30, 150, 210, 270]
+      lmg: ["anchored line", "shared line", "anchored line", "shared line"]
+      connections: [2, 8]
+    unit_8:
+      x: 2771.28
+      y: -1600
+      mooring_heading: [90, 150, 210, 330]
+      lmg: ["shared line", "anchored line", "shared line", "shared line"]
+      connections: [7, 9, 'b13']       
+    unit_9:
+      x: 1385.64
+      y: -2400
+      mooring_heading: [30.0, 90, 150, 270]
+      lmg: ["shared line", "anchored line", "shared line", "shared line"]
+      connections: [8, 10, 'b4']      
+    unit_10:
+      x: 0.0
+      y: -1600.0
+      mooring_heading: [30, 90, 150, 210, 330]
+      lmg: ["anchored line", "shared line", "anchored line", "shared line", "shared line"]
+      connections: [1, 11, 9]       
+    unit_11:
+      x: -1385.64
+      y: -2400
+      mooring_heading: [30.0, 90, 150, 270]
+      lmg: ["shared line", "anchored line", "shared line", "anchored line"]
+      connections: [10, 12]            
+    unit_12:
+      x: -2771.28
+      y: -1600
+      mooring_heading: [30, 90, 210, 330]
+      lmg: ["anchored line", "shared line", "shared line", "shared line"]
+      connections: [13, 'b3', 11]      
+    unit_13:
+      x: -2771.28
+      y: 0
+      mooring_heading: [30, 150, 270, 330]
+      lmg: ["shared line", "shared line", "shared line", "anchored line"]
+      connections: [6, 'b8', 12]      
+Blocks:
+  - block_name: "block1"
+    fowts:
+      - name: "fowt1"
+        center_x: 0.0
+        center_y: 0.0
+        unit_heading: 0.0
+        cell: "center"
+
+Array:
+  - name: "block1"
+    center_x: 0.0
+    center_y: 0.0
+    unit_heading: 0.0
+        

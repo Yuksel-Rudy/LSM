@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from model.lsm import LinearModel
 from model.line import Line
 import yaml
+from shapely.geometry import Polygon
 
 def get_stiffness(lines, group_name, OP):
     for line in lines:
@@ -16,7 +17,7 @@ Thrust = 1.95e6   # [N]
 delta_theta = 5  # [degree]
 
 # read from yaml file:
-input_file = "inputs/lsm_input/MT_cell_00_2ndgen.yaml"
+input_file = "inputs/lsm_input/tetra_triple_anchor_stiff_updated.yaml"
 with open(input_file, 'r') as file:
     config = yaml.safe_load(file)
 
@@ -54,7 +55,7 @@ if 'Cells' in config:
                         [0, 0, np.sin(angle),  np.cos(angle)]
                     ])                    
                     k = get_stiffness(lines, group, OP=0.00)
-                    K_lines_i = r @ k @ r.T
+                    K_lines_i = np.matmul(np.matmul(r, k), r.transpose())
                     K_lines.append(K_lines_i)
                     if group=='shared line':
                         shared_with = unit_data['connections'][j]
@@ -77,13 +78,19 @@ for i, aoa in enumerate(thetas):
     zeta = K_inv @ f
     
     for j in range(num_units):
-        x[i, j] = zeta[2 * j]
-        y[i, j] = zeta[2 * j + 1]
+        x[i, j] = zeta[2 * j, 0]
+        y[i, j] = zeta[2 * j + 1, 0]
 
 # Close the watch circle
 for j in range(num_units):
     x[-1, j] = x[0, j]
     y[-1, j] = y[0, j]
+
+areas = np.zeros(num_units)
+for j in range(num_units):
+    coords = [(x[i, j], y[i, j]) for i in range(len(thetas) + 1)]
+    polygon = Polygon(coords)
+    areas[j] = polygon.area
 
 # Incorporate the location of units
 for j, (_, unit_data) in enumerate(units.items()):
@@ -115,3 +122,14 @@ ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.legend()
 plt.show()
+
+# for validation
+aoa = np.radians(0)
+f = np.array([Thrust * np.cos(aoa) if j % 2 == 0 else Thrust * np.sin(aoa) for j in range(2 * num_units)]).reshape(2 * num_units, 1)
+K_inv = np.linalg.inv(K)
+zeta = K_inv @ f
+print(zeta)
+
+import pandas as pd
+df = pd.DataFrame(K)
+print(df)

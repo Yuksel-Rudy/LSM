@@ -1,26 +1,55 @@
 import numpy as np
+import re
 
 class Cell:
-    def __init__(self, cell_name, mooring_heading, lmg, lines):
+    def __init__(self, cell_name, units, lines):
         self.name = cell_name
-        self.mooring_heading = mooring_heading
-        self.lmg = lmg
         self.lines = lines
-        Ri = []
-        Ki = []
-        for angle, group in zip(mooring_heading, lmg):
-            # CCW is +ve
-            r = np.array([
-                [np.cos(angle), -np.sin(angle)],
-                [np.sin(angle),  np.cos(angle)]
-            ])
-            k = self.get_stiffness(group, OP=0.00)
-            Ri.append(r)
-            Ki.append(k)
-        self.Ri = Ri
-        self.Ki = Ki
-        self.compute_K_line()
-        self.K = sum(self.K_lines)
+        num_units = len(units)
+        K = np.zeros((num_units * 2, num_units * 2))
+        i = 0  # unit index
+        for _, unit_data in units.items():
+            j = 0  # connection index
+            mooring_heading = np.radians(unit_data['mooring_heading'])
+            lmg = unit_data['lmg']
+            K_lines = []
+            for angle, group in zip(mooring_heading, lmg):
+                # CCW is +ve
+                r = np.array([
+                    [np.cos(angle), -np.sin(angle), 0, 0],
+                    [np.sin(angle),  np.cos(angle), 0, 0],
+                    [0, 0, np.cos(angle), -np.sin(angle)],
+                    [0, 0, np.sin(angle),  np.cos(angle)]
+                ])                    
+                k = self.get_stiffness(group, OP=0.00)
+                K_lines_i = np.matmul(np.matmul(r, k), r.transpose())
+                K_lines.append(K_lines_i)
+                if group=='shared line':
+                    shared_with = [unit_data['connections'][j]]
+                    boundary_condition = any(isinstance(item, str) and item.startswith('b') for item in shared_with)
+                    if boundary_condition:
+                        pattern = re.compile(r'b(\d+)')
+                        b_number = [int(match.group(1)) for item in shared_with if isinstance(item, str) and (match := pattern.match(item))]
+                        if len(b_number)>0:
+                            shared_with_boundary = b_number[0]
+                            if (shared_with_boundary - 1) > i:
+                                K[2*i:2*i+2, 2*i:2*i+2] += K_lines_i[0:2, 0:2]
+                                K[2*i:2*i+2, 2*(shared_with_boundary-1):2*(shared_with_boundary-1)+2] += K_lines_i[0:2, 2:4]
+                                K[2*(shared_with_boundary-1):2*(shared_with_boundary-1)+2, 2*i:2*i+2] += K_lines_i[2:4, 0:2]
+                                K[2*(shared_with_boundary-1):2*(shared_with_boundary-1)+2, 2*(shared_with_boundary-1):2*(shared_with_boundary-1)+2] += K_lines_i[2:4, 2:4]
+                    else:
+                        shared_with = shared_with[0]
+                        if (shared_with - 1) > i:
+                            K[2*i:2*i+2, 2*i:2*i+2] += K_lines_i[0:2, 0:2]
+                            K[2*i:2*i+2, 2*(shared_with-1):2*(shared_with-1)+2] += K_lines_i[0:2, 2:4]
+                            K[2*(shared_with-1):2*(shared_with-1)+2, 2*i:2*i+2] += K_lines_i[2:4, 0:2]
+                            K[2*(shared_with-1):2*(shared_with-1)+2, 2*(shared_with-1):2*(shared_with-1)+2] += K_lines_i[2:4, 2:4]
+                    j += 1
+                else:
+                    K[2*i:2*i+2, 2*i:2*i+2] += K_lines_i[0:2, 0:2]
+            i += 1
+        self.K = K
+        self.units = units
 
     def get_stiffness(self, group_name, OP):
         for line in self.lines:
@@ -29,51 +58,24 @@ class Cell:
                     if data['OP'] == OP:
                         return data['stiffness_matrix']
         raise ValueError(f'Stiffness not found for group {group_name} with OP {OP}')
-    
-    def compute_K_line(self):
-        K_lines = []
-        C_lines = []
-        R = self.Ri
-        K = self.Ki
-        for r, k in zip(R, K):
-            K_line = r @ k @ r.T
-            C_line = np.ones_like(K_line, dtype=float)
-            K_lines.append(K_line)
-            C_lines.append(C_line)
-        self.K_lines = K_lines
-        self.C_lines = C_lines
-    
-    def lin2nonlin_corr(self, Kn_lines):
-        K_lines = self.K_lines
-        C_lines = []
-        corrected_K_lines = []
-        for K_line, Kn_line in zip(K_lines, Kn_lines):
-            non_zero_mask = K_line != 0
-            C_line = np.ones_like(K_line, dtype=float)
-            C_line[non_zero_mask] = np.divide(Kn_line[non_zero_mask], K_line[non_zero_mask])
-            C_lines.append(C_line)
-        
-        for K_line, C_line in zip(K_lines, C_lines):
-            corrected_K_line = np.multiply(K_line, C_line)
-            corrected_K_lines.append(corrected_K_line)
 
-        self.K_c = sum(corrected_K_lines)
-
-    def get_cell_watch_circle(self, force, delta_theta, corrected):
-        if corrected:
-            K = self.K_c
-        else:
-            K = self.K
-        
+    def get_cell_watch_circle(self, force, delta_theta):
         thetas = np.radians(np.arange(0, 360, delta_theta))
-        x, y = [], []
-        for aoa in thetas:  # aoa: angle of attach
-            f = np.array([[force * np.cos(aoa)],[force * np.sin(aoa)]])
-            zeta = np.linalg.inv(K) @ f
-            x.append(zeta[0][0])
-            y.append(zeta[1][0])
-        
-        x.append(x[0])
-        y.append(y[0])        
+        num_units = len(self.units)
+        x, y = np.zeros((len(thetas) + 1, num_units)), np.zeros((len(thetas) + 1, num_units))
+        for i, aoa in enumerate(thetas):
+            f = np.array([force * np.cos(aoa) if j % 2 == 0 else force * np.sin(aoa) for j in range(2 * num_units)]).reshape(2 * num_units, 1)
+            K_inv = np.linalg.inv(self.K)
+            zeta = K_inv @ f
+            
+            for j in range(num_units):
+                x[i, j] = zeta[2 * j, 0]
+                y[i, j] = zeta[2 * j + 1, 0]
+
+        # Close the watch circle
+        for j in range(num_units):
+            x[-1, j] = x[0, j]
+            y[-1, j] = y[0, j]            
+
         self.x = x
         self.y = y

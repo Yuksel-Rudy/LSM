@@ -1,0 +1,153 @@
+# Boundary Problem (BP), example 1, baseline case
+Lines:
+  - group_name: "anchored line"
+    scope: 1600.00
+    OP_data:
+      - OP: 0.00
+        k_l: 29884.9197  # inline stiffness [N/m]
+        k_t: 1636.48   # transverse stiffness [N/m]
+  - group_name: "shared line"
+    scope: 1600.00
+    OP_data:
+      - OP: 0.00
+        k_l: 11774.2991
+        k_t: 1704.94863
+
+Cells:
+  - cell_name: "center"
+    type: multiple
+    unit_1:
+      x: 0
+      y: -800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]  # in degrees (changed to radians inside LSM) [0 East and +CCW]
+      lmg: ["shared line", "shared line", "anchored line", "anchored line"]
+      connections: [2, 11]
+    unit_2:
+      x: 1600
+      y: -800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]
+      lmg: ["shared line", "shared line", "shared line", "anchored line"]
+      connections: [3, 12, 1]
+    unit_3:
+      x: 3200
+      y: -800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]
+      lmg: ["shared line", "shared line", "shared line", "anchored line"]
+      connections: [4, 13, 2]
+    unit_4:
+      x: 4800
+      y: -800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]
+      lmg: ["shared line", "shared line", "shared line", "anchored line"]
+      connections: [5, 14, 3]      
+    unit_5:
+      x: 6400
+      y: -800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]
+      lmg: ["shared line", "shared line", "shared line", "anchored line"]
+      connections: [6, 15, 4]         
+    unit_6:
+      x: 8000
+      y: -800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]
+      lmg: ["shared line", "shared line", "shared line", "anchored line"]
+      connections: [7, 16, 5]
+    unit_7:
+      x: 9600
+      y: -800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]
+      lmg: ["shared line", "shared line", "shared line", "anchored line"]
+      connections: [8, 17, 6]      
+    unit_8:
+      x: 11200
+      y: -800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]
+      lmg: ["shared line", "shared line", "shared line", "anchored line"]
+      connections: [9, 18, 7]            
+    unit_9:
+      x: 12800
+      y: -800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]
+      lmg: ["shared line", "shared line", "shared line", "anchored line"]
+      connections: [10, 19, 8]                  
+    unit_10:
+      x: 14400
+      y: -800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]
+      lmg: ["anchored line", "shared line", "shared line", "anchored line"]
+      connections: [20, 9]                        
+    unit_11:
+      x: 0
+      y: 800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]  # in degrees (changed to radians inside LSM) [0 East and +CCW]
+      lmg: ["shared line", "anchored line", "anchored line", "shared line"]
+      connections: [12, 1]
+    unit_12:
+      x: 1600
+      y: 800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]
+      lmg: ["shared line", "anchored line", "shared line", "shared line"]
+      connections: [13, 11, 2]
+    unit_13:
+      x: 3200
+      y: 800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]
+      lmg: ["shared line", "anchored line", "shared line", "shared line"]
+      connections: [14, 12, 3]
+    unit_14:
+      x: 4800
+      y: 800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]
+      lmg: ["shared line", "anchored line", "shared line", "shared line"]
+      connections: [15, 13, 4]      
+    unit_15:
+      x: 6400
+      y: 800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]
+      lmg: ["shared line", "anchored line", "shared line", "shared line"]
+      connections: [16, 14, 5]         
+    unit_16:
+      x: 8000
+      y: 800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]
+      lmg: ["shared line", "anchored line", "shared line", "shared line"]
+      connections: [17, 15, 6]
+    unit_17:
+      x: 9600
+      y: 800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]
+      lmg: ["shared line", "anchored line", "shared line", "shared line"]
+      connections: [18, 16, 7]      
+    unit_18:
+      x: 11200
+      y: 800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]
+      lmg: ["shared line", "anchored line", "shared line", "shared line"]
+      connections: [19, 17, 8]            
+    unit_19:
+      x: 12800
+      y: 800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]
+      lmg: ["shared line", "anchored line", "shared line", "shared line"]
+      connections: [20, 18, 9]                  
+    unit_20:
+      x: 14400
+      y: 800.0
+      mooring_heading: [0.0, 90.0, 180.0, 270]
+      lmg: ["anchored line", "anchored line", "shared line", "shared line"]
+      connections: [19, 10]                         
+Blocks:
+  - block_name: "block1"
+    fowts:
+      - name: "fowt1"
+        center_x: 0.0
+        center_y: 0.0
+        unit_heading: 0.0
+        cell: "center"
+
+Array:
+  - name: "block1"
+    center_x: 0.0
+    center_y: 0.0
+    unit_heading: 0.0
+        

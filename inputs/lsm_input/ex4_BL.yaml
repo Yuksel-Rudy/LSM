@@ -1,0 +1,87 @@
+# Boundary Problem (BP), example 3, baseline case, N=9
+Lines:
+  - group_name: "anchored line"
+    scope: 800.0
+    OP_data:
+      - OP: 0.00
+        k_l: 29884.9197  # inline stiffness [N/m]
+        k_t: 1636.48   # transverse stiffness [N/m]
+  - group_name: "shared line"
+    scope: 1600.00
+    OP_data:
+      - OP: 0.00
+        k_l: 11774.2991
+        k_t: 1704.94863
+
+Cells:
+  - cell_name: "center"
+    type: multiple
+    unit_1:
+      x: 0.0
+      y: 0.0
+      mooring_heading: [0.0, 60.0, 180, 240]
+      lmg: ["shared line", "shared line", "anchored line", "anchored line"]
+      connections: [2, 3] 
+    unit_2:
+      x: 1600.0
+      y: 0.0
+      mooring_heading: [0.0, 120.0, 180, 300]
+      lmg: ["shared line", "shared line", "shared line", "anchored line"]
+      connections: [4, 3, 1]  
+    unit_3:
+      x: 800
+      y: 1358.64
+      mooring_heading: [90, 240, 300]
+      lmg: ["anchored line", "shared line", "shared line"]
+      connections: [1, 2]        
+    unit_4:
+      x: 3200.0
+      y: 0.0
+      mooring_heading: [0.0, 60.0, 180, 240]
+      lmg: ["shared line", "shared line", "shared line", "anchored line"]
+      connections: [5, 6, 2]
+    unit_5:
+      x: 4800.0
+      y: 0.0
+      mooring_heading: [0, 120, 180, 300]
+      lmg: ["shared line", "shared line", "shared line", "anchored line"]
+      connections: [7, 6, 4]
+    unit_6:
+      x: 4000.0
+      y: 1358.64
+      mooring_heading: [90, 240, 300]
+      lmg: ["anchored line", "shared line", "shared line"]
+      connections: [4, 5]     
+    unit_7:
+      x: 6400.0
+      y: 0.0
+      mooring_heading: [0.0, 60.0, 180, 240]
+      lmg: ["shared line", "shared line", "shared line", "anchored line"]
+      connections: [8, 9, 5] 
+    unit_8:
+      x: 8000.0
+      y: 0.0
+      mooring_heading: [0.0, 120.0, 180, 300]
+      lmg: ["anchored line", "shared line", "shared line", "anchored line"]
+      connections: [9, 7]      
+    unit_9:
+      x: 7200
+      y: 1358.64
+      mooring_heading: [90, 240, 300]
+      lmg: ["anchored line", "shared line", "shared line"]
+      connections: [7, 8]                                    
+Blocks:
+  - block_name: "block1"
+    fowts:
+      - name: "fowt1"
+        center_x: 0.0
+        center_y: 0.0
+        unit_heading: 0.0
+        cell: "center"
+
+Array:
+  - name: "block1"
+    center_x: 0.0
+    center_y: 0.0
+    unit_heading: 0.0
+        

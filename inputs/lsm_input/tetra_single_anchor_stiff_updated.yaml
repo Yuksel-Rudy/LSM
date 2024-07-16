@@ -1,0 +1,56 @@
+Lines:
+  - group_name: "anchored line"
+    scope: 1600.00
+    OP_data:
+      - OP: 0.00
+        k_l: 41581  # inline stiffness [N/m]
+        k_t: 2100   # transverse stiffness [N/m]
+  - group_name: "shared line"
+    scope: 1600.00
+    OP_data:
+      - OP: 0.00
+        k_l: 9619
+        k_t: 1578
+
+Cells:
+  - cell_name: "center"
+    type: multiple
+    unit_1:
+      x: -800.0
+      y: -800.0
+      mooring_heading: [0.0, 90.0, 225.0]  # in degrees (changed to radians inside LSM) [0 East and +CCW]
+      lmg: ["shared line", "shared line", "anchored line"]
+      connections: [2, 3]
+    unit_2:
+      x: 800.0
+      y: -800.0
+      mooring_heading: [90.0, 180.0, 315.0]
+      lmg: ["shared line", "shared line", "anchored line",]
+      connections: [4, 1]
+    unit_3:
+      x: -800.0
+      y: 800.0
+      mooring_heading: [0.0, 135.0, 270.0]
+      lmg: ["shared line", "anchored line", "shared line"]
+      connections: [4, 1]
+    unit_4:
+      x: 800.0
+      y: 800.0
+      mooring_heading: [45.0, 180.0, 270.0]
+      lmg: ["anchored line", "shared line", "shared line"]
+      connections: [3, 2]
+Blocks:
+  - block_name: "block1"
+    fowts:
+      - name: "fowt1"
+        center_x: 0.0
+        center_y: 0.0
+        unit_heading: 0.0
+        cell: "center"
+
+Array:
+  - name: "block1"
+    center_x: 0.0
+    center_y: 0.0
+    unit_heading: 0.0
+        

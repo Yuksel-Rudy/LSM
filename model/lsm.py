@@ -32,9 +32,10 @@ class LinearModel:
             cells = config['Cells']
             for cell in cells:
                 cell_name = cell['cell_name']
+                cell_type = cell['type']
                 mooring_heading = np.radians(cell['mooring_heading'])
                 lmg = cell['lmg']
-                self.unit_cells[cell_name] = Cell(cell_name, mooring_heading, lmg, self.lines)
+                self.unit_cells[cell_name] = Cell(cell_name, cell_type, mooring_heading, lmg, self.lines)
 
         # Blocks:
         if 'Blocks' in config:

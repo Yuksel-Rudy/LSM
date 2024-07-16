@@ -1,0 +1,111 @@
+# Boundary Problem (BP), example 2, baseline case, N=13
+Lines:
+  - group_name: "anchored line"
+    scope: 1600.00
+    OP_data:
+      - OP: 0.00
+        k_l: 29884.9197  # inline stiffness [N/m]
+        k_t: 1636.48   # transverse stiffness [N/m]
+  - group_name: "shared line"
+    scope: 1600.00
+    OP_data:
+      - OP: 0.00
+        k_l: 11774.2991
+        k_t: 1704.94863
+
+Cells:
+  - cell_name: "center"
+    type: multiple
+    unit_1:
+      x: 0.0
+      y: 0.0
+      mooring_heading: [60.0, 120.0, 270]  # in degrees (changed to radians inside LSM) [0 East and +CCW]
+      lmg: ["shared line", "shared line", "anchored line"]
+      connections: [6, 5] 
+    unit_2:
+      x: 1600.0
+      y: 0.0
+      mooring_heading: [60.0, 120.0, 270]  # in degrees (changed to radians inside LSM) [0 East and +CCW]
+      lmg: ["shared line", "shared line", "anchored line"]
+      connections: [7, 6]  
+    unit_3:
+      x: 3200.0
+      y: 0.0
+      mooring_heading: [60.0, 120.0, 270]  # in degrees (changed to radians inside LSM) [0 East and +CCW]
+      lmg: ["shared line", "shared line", "anchored line"]
+      connections: [8, 7]
+    unit_4:
+      x: 4800.0
+      y: 0.0
+      mooring_heading: [60.0, 120.0, 270]  # in degrees (changed to radians inside LSM) [0 East and +CCW]
+      lmg: ["shared line", "shared line", "anchored line"]
+      connections: [9, 8]
+    unit_5:
+      x: -800
+      y: 1358.64
+      mooring_heading: [0.0, 60.0, 90, 180, 270, 300]  # in degrees (changed to radians inside LSM) [0 East and +CCW]
+      lmg: ["shared line", "shared line", "anchored line", "anchored line", "anchored line", "shared line"]
+      connections: [6, 10, 1] 
+    unit_6:
+      x: 800
+      y: 1358.64
+      mooring_heading: [0.0, 60.0, 90, 120, 180, 240, 270, 300]  # in degrees (changed to radians inside LSM) [0 East and +CCW]
+      lmg: ["shared line", "shared line", "anchored line", "shared line", "shared line", "shared line", "anchored line", "shared line"]
+      connections: [7, 11, 10, 5, 1, 2]
+    unit_7:
+      x: 2400.0
+      y: 1358.64
+      mooring_heading: [0.0, 60.0, 90, 120, 180, 240, 270, 300]  # in degrees (changed to radians inside LSM) [0 East and +CCW]
+      lmg: ["shared line", "shared line", "anchored line", "shared line", "shared line", "shared line", "anchored line", "shared line"]
+      connections: [8, 12, 11, 6, 2, 3]
+    unit_8:
+      x: 4000.0
+      y: 1358.64
+      mooring_heading: [0.0, 60.0, 90, 120, 180, 240, 270, 300]  # in degrees (changed to radians inside LSM) [0 East and +CCW]
+      lmg: ["shared line", "shared line", "anchored line", "shared line", "shared line", "shared line", "anchored line", "shared line"]
+      connections: [9, 13, 12, 7, 3, 4]            
+    unit_9:
+      x: 5600.0
+      y: 1358.64
+      mooring_heading: [0.0, 90, 120, 180, 240, 270]  # in degrees (changed to radians inside LSM) [0 East and +CCW]
+      lmg: ["anchored line", "anchored line", "shared line", "shared line", "shared line", "anchored line"]
+      connections: [13, 8, 4]  
+    unit_10:
+      x: 0.0
+      y: 2717.28
+      mooring_heading: [90, 240.0, 300]  # in degrees (changed to radians inside LSM) [0 East and +CCW]
+      lmg: ["anchored line", "shared line", "shared line"]
+      connections: [5, 6] 
+    unit_11:
+      x: 1600.0
+      y: 2717.28
+      mooring_heading: [90, 240.0, 300]  # in degrees (changed to radians inside LSM) [0 East and +CCW]
+      lmg: ["anchored line", "shared line", "shared line"]
+      connections: [6, 7]  
+    unit_12:
+      x: 3200.0
+      y: 2717.28
+      mooring_heading: [90, 240.0, 300]
+      lmg: ["anchored line", "shared line", "shared line"]
+      connections: [7, 8]
+    unit_13:
+      x: 4800.0
+      y: 2717.28
+      mooring_heading: [90, 240.0, 300]
+      lmg: ["anchored line", "shared line", "shared line"]
+      connections: [8, 9]                     
+Blocks:
+  - block_name: "block1"
+    fowts:
+      - name: "fowt1"
+        center_x: 0.0
+        center_y: 0.0
+        unit_heading: 0.0
+        cell: "center"
+
+Array:
+  - name: "block1"
+    center_x: 0.0
+    center_y: 0.0
+    unit_heading: 0.0
+        
