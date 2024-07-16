@@ -15,7 +15,6 @@ Lines:
 
 Cells:
   - cell_name: "center"
-    type: multiple
     unit_1:
       x: 0
       y: -800.0
